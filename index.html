@@ -1,0 +1,901 @@
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Desafio Dev</title>
+    <style>
+        /* [ ... ESTILOS CSS PERMANECEM IGUAIS ... ] */
+        :root {
+            --primary-color: #007bff; /* Azul Forte */
+            --secondary-color: #17a2b8; /* Ciano/Turquesa */
+            --success-color: #28a745; /* Verde Sucesso */
+            --warning-color: #ffc107; /* Amarelo Aviso */
+            --danger-color: #dc3545; /* Vermelho Perigo */
+            --background-light: #f8f9fa;
+            --text-dark: #343a40;
+            --border-light: #dee2e6;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: #ccc;
+            margin: 30px 0;
+        }
+
+        section {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        section#comissions-section { border-left: 5px solid var(--success-color); }
+        section#stock-section { border-left: 5px solid var(--secondary-color); }
+        section#interest-section { border-left: 5px solid var(--warning-color); }
+
+
+        h2 {
+            color: var(--text-dark);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed var(--border-light);
+            padding-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f3f3f3;
+        }
+
+        tr:hover {
+            background-color: #e9ecef;
+        }
+
+        .total-row {
+            background-color: #cce5ff !important;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="number"], input[type="text"], input[type="date"], select {
+            padding: 10px;
+            border: 1px solid var(--border-light);
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+        }
+
+
+        .action-button {
+            padding: 8px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            margin: 0 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-button:active {
+            transform: translateY(1px);
+        }
+
+        .action-button.edit {
+            background-color: #ffeb3b; /* Amarelo mais suave */
+            color: var(--text-dark);
+        }
+        .action-button.edit:hover {
+            background-color: #fdd835;
+        }
+
+        .action-button.delete {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        .action-button.delete:hover {
+            background-color: #c82333;
+        }
+
+        button.full-width-btn {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.1s;
+            margin-top: 10px;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #117a8b;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: var(--text-dark);
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .result-box {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .result-success {
+            background-color: #d4edda;
+            color: var(--success-color);
+            border: 1px solid #c3e6cb;
+        }
+
+        .result-danger {
+            background-color: #f8d7da;
+            color: var(--danger-color);
+            border: 1px solid #f5c6cb;
+        }
+
+        .result-info {
+            background-color: #cce5ff;
+            color: var(--primary-color);
+            border: 1px solid #b8daff;
+        }
+
+        .stock-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 450px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 10px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: var(--secondary-color);
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-footer button {
+            width: auto;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 20px;
+            }
+            .stock-form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .interest-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .interest-form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- ESTILOS DO NOVO GRÁFICO DE BARRAS --- */
+        #commissionChart {
+            margin-top: 20px;
+            padding: 15px 0;
+            border-top: 1px dashed var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chart-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: 30px; /* Altura da barra */
+        }
+
+        .chart-label {
+            width: 100px; /* Largura fixa para os nomes */
+            font-weight: bold;
+            font-size: 0.9em;
+            color: var(--text-dark);
+            text-align: right;
+        }
+
+        .chart-bar {
+            height: 100%;
+            background-color: var(--success-color);
+            border-radius: 3px;
+            transition: width 1s ease-out; /* Animação simples */
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-bar-value {
+            color: white;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+            white-space: nowrap;
+        }
+        /* ------------------------------------------- */
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>📊 Desafio Dev</h1>
+
+    <section id="comissions-section">
+        <h2>💵 1. Performance de Vendas (Comissão)</h2>
+        <p>Regras: **&lt;R$100: 0%** | **R$100 a &lt;R$500: 1%** | **Igual ou Maior R$500: 5%**</p>
+        <div id="comission-results">
+            </div>
+
+        <h3 style="margin-top: 30px;">📊 Participação de Comissão (Gráfico)</h3>
+        <div id="commissionChart">
+            </div>
+        </section>
+
+    <hr>
+
+    <section id="stock-section">
+        <h2>📦 2. Gestão de Estoque (Movimentação, CRUD e Exportação)</h2>
+        <div class="stock-form-grid">
+            <div class="form-group">
+                <label for="productCode">Produto:</label>
+                <select id="productCode"></select>
+            </div>
+            <div class="form-group">
+                <label for="movementType">Tipo de Movimento:</label>
+                <select id="movementType">
+                    <option value="entrada">ENTRADA (Aumenta)</option>
+                    <option value="saida">SAÍDA (Diminui)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="movementQty">Qtde:</label>
+                <input type="number" id="movementQty" min="1" value="10">
+            </div>
+            <div class="form-group">
+                <label for="movementDesc">Descrição (ID: <span id="movementIdDisplay">1</span>):</label>
+                <input type="text" id="movementDesc" value="Ajuste Padrão" placeholder="ID Único / Descrição">
+            </div>
+        </div>
+
+        <button class="full-width-btn btn-primary" onclick="performMovement()">Lançar Movimentação</button>
+        <div id="movementResult" class="result-box result-success" style="display:none;"></div>
+
+        <h3>Estoque Atualizado</h3>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+             <button class="full-width-btn btn-primary" onclick="exportToExcel()" style="flex: 1; background-color: var(--success-color);">💾 Exportar para Excel</button>
+             <button class="full-width-btn btn-warning" onclick="exportToPDF()" style="flex: 1; background-color: var(--danger-color); color: white;">💾 Exportar para PDF</button>
+         </div>
+        <div id="stock-results">
+            </div>
+    </section>
+
+    <hr>
+
+    <section id="interest-section">
+        <h2>⚠️ 3. Cálculo de Juros por Atraso</h2>
+        <p>Regra: Multa fixa de **2,5% ao dia** sobre o **valor original** (Juros Simples).</p>
+
+        <div class="form-group">
+            <label for="principalValue">Valor Original (R$):</label>
+            <input type="number" id="principalValue" min="0.01" step="0.01" value="500.00">
+        </div>
+
+        <div class="interest-form-grid">
+             <div class="form-group">
+                <label for="dueDate">Data de Vencimento:</label>
+                <input type="date" id="dueDate">
+            </div>
+
+            <div class="form-group">
+                <label for="paymentDate">Data de Pagamento:</label>
+                <input type="date" id="paymentDate">
+            </div>
+        </div>
+
+        <button class="full-width-btn btn-warning" onclick="calculateInterest()">Calcular Juros e Total</button>
+
+        <div id="interestResult" class="result-box result-info" style="display:none;"></div>
+    </section>
+
+</div>
+
+<div id="editModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>✏️ Editar Produto</h2>
+            <button class="modal-close-btn" onclick="closeEditModal()">&times;</button>
+        </div>
+        <form id="editForm">
+            <input type="hidden" id="edit-originalCode">
+
+            <div class="form-group">
+                <label for="edit-codigoProduto">Código do Produto:</label>
+                <input type="number" id="edit-codigoProduto" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-descricaoProduto">Descrição:</label>
+                <input type="text" id="edit-descricaoProduto" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-estoque">Estoque Atual:</label>
+                <input type="number" id="edit-estoque" min="0" required>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="full-width-btn btn-warning" onclick="closeEditModal()">Cancelar</button>
+                <button type="submit" class="full-width-btn btn-primary">Salvar Alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // --- DADOS JSON INICIAIS ---
+    const salesData = {
+        "vendas": [
+            { "vendedor": "João Silva", "valor": 1200.50 }, { "vendedor": "João Silva", "valor": 950.75 },
+            { "vendedor": "João Silva", "valor": 1800.00 }, { "vendedor": "João Silva", "valor": 1400.30 },
+            { "vendedor": "João Silva", "valor": 1100.90 }, { "vendedor": "João Silva", "valor": 1550.00 },
+            { "vendedor": "João Silva", "valor": 1700.80 }, { "vendedor": "João Silva", "valor": 250.30 },
+            { "vendedor": "João Silva", "valor": 480.75 },
+            { "vendedor": "João Silva", "valor": 320.40 },
+
+            { "vendedor": "Maria Souza", "valor": 2100.40 }, { "vendedor": "Maria Souza", "valor": 1350.60 },
+            { "vendedor": "Maria Souza", "valor": 950.20 }, { "vendedor": "Maria Souza", "valor": 1600.75 },
+            { "vendedor": "Maria Souza", "valor": 1750.00 }, { "vendedor": "Maria Souza", "valor": 1450.90 },
+            { "vendedor": "Maria Souza", "valor": 400.50 },
+            { "vendedor": "Maria Souza", "valor": 180.20 },
+            { "vendedor": "Maria Souza", "valor": 90.75 },
+
+            { "vendedor": "Carlos Oliveira", "valor": 800.50 }, { "vendedor": "Carlos Oliveira", "valor": 1200.00 },
+            { "vendedor": "Carlos Oliveira", "valor": 1950.30 }, { "vendedor": "Carlos Oliveira", "valor": 1750.80 },
+            { "vendedor": "Carlos Oliveira", "valor": 1300.60 },
+            { "vendedor": "Carlos Oliveira", "valor": 300.40 },
+            { "vendedor": "Carlos Oliveira", "valor": 500.00 },
+            { "vendedor": "Carlos Oliveira", "valor": 125.75 },
+
+            { "vendedor": "Ana Lima", "valor": 1000.00 }, { "vendedor": "Ana Lima", "valor": 1100.50 },
+            { "vendedor": "Ana Lima", "valor": 1250.75 }, { "vendedor": "Ana Lima", "valor": 1400.20 },
+            { "vendedor": "Ana Lima", "valor": 1550.90 }, { "vendedor": "Ana Lima", "valor": 1650.00 },
+            { "vendedor": "Ana Lima", "valor": 75.30 },
+            { "vendedor": "Ana Lima", "valor": 420.90 },
+            { "vendedor": "Ana Lima", "valor": 315.40 }
+        ]
+    };
+
+    let stockData = {
+        "estoque": [
+            { "codigoProduto": 101, "descricaoProduto": "Caneta Azul", "estoque": 150 },
+            { "codigoProduto": 102, "descricaoProduto": "Caderno Universitário", "estoque": 75 },
+            { "codigoProduto": 103, "descricaoProduto": "Borracha Branca", "estoque": 200 },
+            { "codigoProduto": 104, "descricaoProduto": "Lápis Preto HB", "estoque": 320 },
+            { "codigoProduto": 105, "descricaoProduto": "Marcador de Texto Amarelo", "estoque": 90 }
+        ]
+    };
+
+    let movementIdCounter = 1;
+
+    // --- UTILS ---
+    const formatCurrency = (value) => {
+        return `R$ ${value.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
+    }
+
+    function showFeedback(elementId, type, message) {
+        const resultElement = document.getElementById(elementId);
+        resultElement.style.display = 'block';
+
+        if (type === 'success') {
+            resultElement.className = 'result-box result-success';
+            resultElement.innerHTML = `✅ ${message}`;
+        } else if (type === 'danger') {
+            resultElement.className = 'result-box result-danger';
+            resultElement.innerHTML = `❌ ${message}`;
+        } else {
+            resultElement.className = 'result-box result-info';
+            resultElement.innerHTML = `ℹ️ ${message}`;
+        }
+
+        setTimeout(() => {
+            resultElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // ==========================================================
+    // --- QUESTÃO 1: CÁLCULO DE COMISSÃO E PERCENTUAL ---
+    // ==========================================================
+    function calculateCommission(saleValue) {
+        if (saleValue < 100.00) return 0;
+        if (saleValue < 500.00) return saleValue * 0.01;
+        return saleValue * 0.05;
+    }
+
+    function processCommissions() {
+        const commissionsBySeller = salesData.vendas.reduce((acc, sale) => {
+            const commission = calculateCommission(sale.valor);
+            acc[sale.vendedor] = (acc[sale.vendedor] || 0) + commission;
+            return acc;
+        }, {});
+        displayCommissions(commissionsBySeller);
+        // NOVO: Chama o gráfico após calcular as comissões
+        displayChart(commissionsBySeller); 
+    }
+
+    function displayCommissions(commissions) {
+        const totalCommissionSum = Object.values(commissions).reduce((sum, current) => sum + current, 0);
+
+        let html = '<table>';
+        html += '<thead><tr><th>Vendedor 🧑‍💼</th><th>Comissão Total 💲</th><th>Participação (%) 📊</th></tr></thead><tbody>';
+
+        const sellers = Object.keys(commissions);
+
+        for (const seller of sellers) {
+            const commissionValue = commissions[seller];
+            const totalCommission = formatCurrency(commissionValue);
+            const percentage = totalCommissionSum > 0
+                ? (commissionValue / totalCommissionSum) * 100
+                : 0;
+            const formattedPercentage = percentage.toFixed(2).replace('.', ',') + '%';
+
+            html += `<tr><td>${seller}</td><td>${totalCommission}</td><td>${formattedPercentage}</td></tr>`;
+        }
+        html += `<tr class="total-row"><td>TOTAL GERAL</td><td>${formatCurrency(totalCommissionSum)}</td><td>100,00%</td></tr>`;
+        html += '</tbody></table>';
+        document.getElementById('comission-results').innerHTML = html;
+    }
+
+    // NOVA FUNÇÃO: Renderiza o gráfico de barras simples
+    function displayChart(commissions) {
+        const totalCommissionSum = Object.values(commissions).reduce((sum, current) => sum + current, 0);
+        const chartContainer = document.getElementById('commissionChart');
+        chartContainer.innerHTML = '';
+        
+        if (totalCommissionSum === 0) {
+            chartContainer.innerHTML = '<p style="text-align: center;">Não há comissões para gerar o gráfico.</p>';
+            return;
+        }
+
+        const sellers = Object.keys(commissions).sort((a, b) => commissions[b] - commissions[a]); // Ordena do maior para o menor
+
+        let html = '';
+        sellers.forEach(seller => {
+            const commissionValue = commissions[seller];
+            const percentage = (commissionValue / totalCommissionSum) * 100;
+            const barWidth = Math.min(percentage, 100).toFixed(2); // Limita em 100%
+
+            html += `
+                <div class="chart-bar-container">
+                    <div class="chart-label">${seller}</div>
+                    <div class="chart-bar" style="width: ${barWidth}%;">
+                        <span class="chart-bar-value">${barWidth.replace('.', ',')}%</span>
+                    </div>
+                </div>
+            `;
+        });
+        chartContainer.innerHTML = html;
+    }
+
+    // ==========================================================
+    // --- QUESTÃO 2: CONTROLE DE ESTOQUE (CRUD e MOVIMENTAÇÃO) ---
+    // (Funções inalteradas)
+    // ==========================================================
+    function populateProductSelect() {
+        const select = document.getElementById('productCode');
+        select.innerHTML = '';
+        stockData.estoque.forEach(product => {
+            const option = document.createElement('option');
+            option.value = product.codigoProduto;
+            option.textContent = `${product.codigoProduto} - ${product.descricaoProduto}`;
+            select.appendChild(option);
+        });
+        document.getElementById('movementIdDisplay').textContent = movementIdCounter;
+    }
+
+    function displayStock() {
+        let html = '<table>';
+        html += '<thead><tr><th>Cód. 🏷️</th><th>Descrição do Produto</th><th>Estoque Atual 🔢</th><th style="text-align:center;">Ações</th></tr></thead><tbody>';
+        stockData.estoque.forEach(product => {
+            const actionButtons = `
+                <div style="display:flex; justify-content:center; gap:8px;">
+                    <button class="action-button edit" onclick="openEditModal(${product.codigoProduto})">
+                        <span style="font-size:1.1em;">✏️</span>
+                    </button>
+                    <button class="action-button delete" onclick="deleteProduct(${product.codigoProduto}, '${product.descricaoProduto}')">
+                        <span style="font-size:1.1em;">🗑️</span>
+                    </button>
+                </div>
+            `;
+            html += `<tr><td>${product.codigoProduto}</td><td>${product.descricaoProduto}</td><td>${product.estoque}</td><td>${actionButtons}</td></tr>`;
+        });
+        html += '</tbody></table>';
+        document.getElementById('stock-results').innerHTML = html;
+    }
+
+    function performMovement() {
+        const productCode = parseInt(document.getElementById('productCode').value);
+        const movementType = document.getElementById('movementType').value;
+        const quantity = parseInt(document.getElementById('movementQty').value);
+        const description = document.getElementById('movementDesc').value || "Movimento Padrão";
+
+        if (isNaN(quantity) || quantity <= 0) {
+            showFeedback('movementResult', 'danger', 'Erro: A quantidade deve ser um número inteiro positivo.');
+            return;
+        }
+        if (!productCode) {
+            showFeedback('movementResult', 'danger', 'Erro: Por favor, selecione um produto.');
+            return;
+        }
+
+        const product = stockData.estoque.find(p => p.codigoProduto === productCode);
+        const currentMovementId = movementIdCounter;
+
+        if (!product) {
+            showFeedback('movementResult', 'danger', `Erro: Produto com código ${productCode} não encontrado no estoque.`);
+            return;
+        }
+
+        if (movementType === 'entrada') {
+            product.estoque += quantity;
+        } else if (movementType === 'saida') {
+            if (product.estoque < quantity) {
+                showFeedback('movementResult', 'danger', `Erro ID ${currentMovementId}: Estoque insuficiente. Restam apenas ${product.estoque} unidades.`);
+                return;
+            }
+            product.estoque -= quantity;
+        }
+
+        movementIdCounter++;
+        document.getElementById('movementIdDisplay').textContent = movementIdCounter;
+
+        displayStock();
+
+        showFeedback('movementResult', 'success', `ID **${currentMovementId}**: Movimento de **${movementType.toUpperCase()}** - ${quantity} unidades. Estoque Final de "${product.descricaoProduto}": **${product.estoque}** unidades.`);
+
+        document.getElementById('movementDesc').value = 'Ajuste Padrão';
+        document.getElementById('movementQty').value = 10;
+    }
+
+    function deleteProduct(code, description) {
+        const isConfirmed = window.confirm(`Tem certeza que deseja EXCLUIR o produto "${description}" (Cód: ${code})?`);
+        if (isConfirmed) {
+            const initialLength = stockData.estoque.length;
+            stockData.estoque = stockData.estoque.filter(p => p.codigoProduto !== code);
+
+            if (stockData.estoque.length < initialLength) {
+                displayStock();
+                populateProductSelect();
+                showFeedback('movementResult', 'success', `Produto "${description}" excluído com sucesso!`);
+            } else {
+                showFeedback('movementResult', 'danger', `Erro ao excluir produto. Código ${code} não encontrado.`);
+            }
+        } else {
+            showFeedback('movementResult', 'info', `A exclusão do produto "${description}" foi cancelada.`);
+        }
+    }
+
+    function openEditModal(code) {
+        const product = stockData.estoque.find(p => p.codigoProduto === code);
+        if (!product) { showFeedback('movementResult', 'danger', `Erro: Produto com código ${code} não encontrado para edição.`); return; }
+        document.getElementById('edit-originalCode').value = product.codigoProduto;
+        document.getElementById('edit-codigoProduto').value = product.codigoProduto;
+        document.getElementById('edit-descricaoProduto').value = product.descricaoProduto;
+        document.getElementById('edit-estoque').value = product.estoque;
+        document.getElementById('editModal').style.display = 'flex';
+        document.getElementById('editForm').onsubmit = saveEditedProduct;
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+        document.getElementById('editForm').onsubmit = null;
+    }
+
+    function saveEditedProduct(event) {
+        event.preventDefault();
+        const originalCode = parseInt(document.getElementById('edit-originalCode').value);
+        const newCode = parseInt(document.getElementById('edit-codigoProduto').value);
+        const newDescription = document.getElementById('edit-descricaoProduto').value;
+        const newStock = parseInt(document.getElementById('edit-estoque').value);
+
+        const index = stockData.estoque.findIndex(p => p.codigoProduto === originalCode);
+        if (index === -1) { closeEditModal(); showFeedback('movementResult', 'danger', `Erro ao salvar.`); return; }
+
+        if (newCode !== originalCode) {
+            const existingProduct = stockData.estoque.find((p, i) => p.codigoProduto === newCode && i !== index);
+            if (existingProduct) {
+                showFeedback('movementResult', 'danger', `Erro: O novo código ${newCode} já está em uso por outro produto.`);
+                return;
+            }
+        }
+        stockData.estoque[index].codigoProduto = newCode;
+        stockData.estoque[index].descricaoProduto = newDescription;
+        stockData.estoque[index].estoque = newStock;
+
+        closeEditModal();
+        displayStock();
+        populateProductSelect();
+        showFeedback('movementResult', 'success', `Produto "${newDescription}" atualizado com sucesso!`);
+    }
+
+    // ==========================================================
+    // --- QUESTÃO 3: CÁLCULO DE JUROS (COM DATA DE PAGAMENTO) ---
+    // (Funções inalteradas)
+    // ==========================================================
+    function calculateInterest() {
+        const principalValue = parseFloat(document.getElementById('principalValue').value);
+        const dueDateString = document.getElementById('dueDate').value;
+        const paymentDateString = document.getElementById('paymentDate').value;
+
+        if (isNaN(principalValue) || principalValue <= 0 || !dueDateString || !paymentDateString) {
+            showFeedback('interestResult', 'danger', 'Por favor, preencha o valor principal, a data de vencimento e a data de pagamento.');
+            return;
+        }
+
+        const dueDate = new Date(dueDateString);
+        const paymentDate = new Date(paymentDateString);
+
+        dueDate.setHours(0, 0, 0, 0);
+        paymentDate.setHours(0, 0, 0, 0);
+
+        if (paymentDate <= dueDate) {
+            showFeedback('interestResult', 'success', `🎉 Pagamento em dia (Data de Pagamento: ${paymentDate.toLocaleDateString('pt-BR')})! Valor: ${formatCurrency(principalValue)}. Nenhum juro ou multa aplicado.`);
+            return;
+        }
+        
+        const timeDifference = paymentDate.getTime() - dueDate.getTime();
+        const daysOverdue = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+        const dailyRate = 0.025; // 2.5%
+        const dailyInterestValue = principalValue * dailyRate; 
+        const interestValue = dailyInterestValue * daysOverdue;
+        const totalValue = principalValue + interestValue;
+
+        document.getElementById('interestResult').className = 'result-box result-danger';
+        document.getElementById('interestResult').style.display = 'block';
+        document.getElementById('interestResult').innerHTML = `
+            <p><strong>Período de Atraso: ${daysOverdue} dias</strong></p>
+            <p>Vencimento: ${dueDate.toLocaleDateString('pt-BR')} | Pagamento: ${paymentDate.toLocaleDateString('pt-BR')}</p>
+            <p>Valor Principal: ${formatCurrency(principalValue)}</p>
+            <p>Multa Fixa Diária (2,5%): ${formatCurrency(dailyInterestValue)}</p>
+            <p>Juros/Multa Total: **${formatCurrency(interestValue)}**</p>
+            <p><strong>Total Pago: ${formatCurrency(totalValue)}</strong></p>
+        `;
+    }
+
+    function setDefaultDates() {
+        const dueDateInput = document.getElementById('dueDate');
+        const paymentDateInput = document.getElementById('paymentDate');
+
+        const defaultDueDate = new Date();
+        defaultDueDate.setDate(defaultDueDate.getDate() - 7); 
+
+        const defaultPaymentDate = new Date();
+        defaultPaymentDate.setDate(defaultPaymentDate.getDate() - 1); 
+
+        dueDateInput.value = defaultDueDate.toISOString().split('T')[0];
+        paymentDateInput.value = defaultPaymentDate.toISOString().split('T')[0];
+    }
+
+    // ==========================================================
+    // --- FUNÇÕES DE EXPORTAÇÃO ---
+    // (Funções inalteradas)
+    // ==========================================================
+    function exportToExcel() {
+        if (typeof XLSX === 'undefined') {
+             showFeedback('movementResult', 'danger', 'Erro: Biblioteca SheetJS (Excel) não carregada.');
+             return;
+        }
+        const dataToExport = stockData.estoque.map(product => ({
+            'Código': product.codigoProduto,
+            'Descrição do Produto': product.descricaoProduto,
+            'Estoque Atual': product.estoque
+        }));
+        const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Estoque");
+        XLSX.writeFile(workbook, "relatorio_estoque.xlsx");
+        showFeedback('movementResult', 'success', 'Relatório de Estoque exportado para **Excel** com sucesso!');
+    }
+
+    function exportToPDF() {
+        if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+             showFeedback('movementResult', 'danger', 'Erro: Bibliotecas html2canvas ou jsPDF não carregadas.');
+             return;
+        }
+        const stockTableContainer = document.getElementById('stock-results');
+        const table = stockTableContainer.querySelector('table');
+        if (!table) { showFeedback('movementResult', 'danger', 'Erro: A tabela de estoque não foi encontrada para exportação em PDF.'); return; }
+        const actionColumnIndex = table.rows[0].cells.length - 1;
+
+        for (let i = 0; i < table.rows.length; i++) {
+            if (table.rows[i].cells.length > actionColumnIndex) {
+                table.rows[i].cells[actionColumnIndex].style.display = 'none';
+            }
+        }
+        html2canvas(table).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgProps= pdf.getImageProperties(imgData);
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save("relatorio_estoque.pdf");
+
+            // Volta a mostrar a coluna de Ações
+            for (let i = 0; i < table.rows.length; i++) {
+                if (table.rows[i].cells.length > actionColumnIndex) {
+                    table.rows[i].cells[actionColumnIndex].style.display = '';
+                }
+            }
+        });
+        showFeedback('movementResult', 'success', 'Relatório de Estoque exportado para **PDF** com sucesso!');
+    }
+
+
+    // ==========================================================
+    // --- INICIALIZAÇÃO DA APLICAÇÃO ---
+    // ==========================================================
+    window.onload = () => {
+        processCommissions();
+        populateProductSelect();
+        displayStock();
+        setDefaultDates(); 
+    };
+
+</script>
+</body>
+</html>
