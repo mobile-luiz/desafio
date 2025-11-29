@@ -1,10 +1,10 @@
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📊 Desafio Dev</title>
+    <title>📊 Desafio Dev Otimizado</title>
     <style>
-        /* [ ... ESTILOS CSS PERMANECEM IGUAIS ... ] */
         :root {
             --primary-color: #007bff; /* Azul Forte */
             --secondary-color: #17a2b8; /* Ciano/Turquesa */
@@ -295,28 +295,10 @@
             width: auto;
         }
 
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            .container {
-                padding: 20px;
-            }
-            .stock-form-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
         .interest-form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-        }
-
-        @media (max-width: 600px) {
-            .interest-form-grid {
-                grid-template-columns: 1fr;
-            }
         }
 
         /* --- ESTILOS DO NOVO GRÁFICO DE BARRAS --- */
@@ -363,7 +345,96 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
             white-space: nowrap;
         }
-        /* ------------------------------------------- */
+        
+        /* --- Melhorias de Responsividade para Telas Pequenas --- */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px; /* Reduz um pouco o padding interno */
+            }
+            .stock-form-grid, .interest-form-grid {
+                grid-template-columns: 1fr; /* Colunas únicas para formulários em telas pequenas */
+            }
+            
+            /* 1. Tratamento de Tabelas em Dispositivos Móveis */
+            table, thead, tbody, th, td, tr {
+                display: block; /* Transforma todos os elementos da tabela em blocos */
+            }
+
+            thead tr {
+                position: absolute; /* Oculta o cabeçalho original de forma acessível */
+                top: -9999px;
+                left: -9999px;
+            }
+            
+            tr {
+                border: 1px solid var(--border-light);
+                margin-bottom: 15px;
+                border-radius: 6px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+            
+            td {
+                border: none;
+                border-bottom: 1px solid var(--border-light);
+                position: relative;
+                padding-left: 50%; /* Espaço para o "novo cabeçalho" */
+                text-align: right; /* Alinha o conteúdo à direita */
+            }
+
+            td:last-child {
+                border-bottom: 0; /* Remove a borda inferior do último item */
+            }
+
+            /* Adiciona o "novo cabeçalho" (label) usando atributos de dados e pseudo-elementos */
+            td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+                color: var(--secondary-color);
+                text-align: left; /* Alinha o label à esquerda */
+            }
+
+            /* Ajuste específico para a coluna de Ações */
+            #stock-results td:last-child {
+                text-align: center;
+                padding-left: 10px; /* Reduz o padding para centralizar melhor */
+            }
+
+            /* 2. Ajuste do Gráfico de Barras */
+            .chart-bar-container {
+                flex-direction: column; /* Coloca o rótulo acima da barra */
+                align-items: flex-start;
+                height: auto;
+            }
+            
+            .chart-label {
+                width: auto;
+                text-align: left;
+                margin-bottom: 5px;
+                padding-left: 5px; /* Pequeno espaçamento */
+            }
+
+            .chart-bar {
+                width: 100% !important; /* Faz a barra ocupar a largura total do container */
+                height: 25px;
+                justify-content: flex-start; /* Move o valor para a esquerda (visualização melhor) */
+                padding-left: 5px;
+                padding-right: 0;
+            }
+            
+            /* 3. Ajuste dos Botões de Exportação */
+            div[style*="flex; gap: 10px;"] {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -556,7 +627,7 @@
     }
 
     // ==========================================================
-    // --- QUESTÃO 1: CÁLCULO DE COMISSÃO E PERCENTUAL ---
+    // --- QUESTÃO 1: CÁLCULO DE COMISSÃO E PERCENTUAL (RESPONSIVO) ---
     // ==========================================================
     function calculateCommission(saleValue) {
         if (saleValue < 100.00) return 0;
@@ -571,7 +642,6 @@
             return acc;
         }, {});
         displayCommissions(commissionsBySeller);
-        // NOVO: Chama o gráfico após calcular as comissões
         displayChart(commissionsBySeller); 
     }
 
@@ -580,6 +650,8 @@
 
         let html = '<table>';
         html += '<thead><tr><th>Vendedor 🧑‍💼</th><th>Comissão Total 💲</th><th>Participação (%) 📊</th></tr></thead><tbody>';
+
+        const commissionLabels = ["Vendedor", "Comissão Total", "Participação"];
 
         const sellers = Object.keys(commissions);
 
@@ -591,14 +663,21 @@
                 : 0;
             const formattedPercentage = percentage.toFixed(2).replace('.', ',') + '%';
 
-            html += `<tr><td>${seller}</td><td>${totalCommission}</td><td>${formattedPercentage}</td></tr>`;
+            html += `<tr>
+                        <td data-label="${commissionLabels[0]}">${seller}</td>
+                        <td data-label="${commissionLabels[1]}">${totalCommission}</td>
+                        <td data-label="${commissionLabels[2]}">${formattedPercentage}</td>
+                    </tr>`;
         }
-        html += `<tr class="total-row"><td>TOTAL GERAL</td><td>${formatCurrency(totalCommissionSum)}</td><td>100,00%</td></tr>`;
+        html += `<tr class="total-row">
+                    <td data-label="Total">TOTAL GERAL</td>
+                    <td data-label="Soma Total">${formatCurrency(totalCommissionSum)}</td>
+                    <td data-label="Percentual Total">100,00%</td>
+                 </tr>`;
         html += '</tbody></table>';
         document.getElementById('comission-results').innerHTML = html;
     }
 
-    // NOVA FUNÇÃO: Renderiza o gráfico de barras simples
     function displayChart(commissions) {
         const totalCommissionSum = Object.values(commissions).reduce((sum, current) => sum + current, 0);
         const chartContainer = document.getElementById('commissionChart');
@@ -609,13 +688,13 @@
             return;
         }
 
-        const sellers = Object.keys(commissions).sort((a, b) => commissions[b] - commissions[a]); // Ordena do maior para o menor
+        const sellers = Object.keys(commissions).sort((a, b) => commissions[b] - commissions[a]); 
 
         let html = '';
         sellers.forEach(seller => {
             const commissionValue = commissions[seller];
             const percentage = (commissionValue / totalCommissionSum) * 100;
-            const barWidth = Math.min(percentage, 100).toFixed(2); // Limita em 100%
+            const barWidth = Math.min(percentage, 100).toFixed(2); 
 
             html += `
                 <div class="chart-bar-container">
@@ -630,8 +709,7 @@
     }
 
     // ==========================================================
-    // --- QUESTÃO 2: CONTROLE DE ESTOQUE (CRUD e MOVIMENTAÇÃO) ---
-    // (Funções inalteradas)
+    // --- QUESTÃO 2: CONTROLE DE ESTOQUE (RESPONSIVO) ---
     // ==========================================================
     function populateProductSelect() {
         const select = document.getElementById('productCode');
@@ -648,6 +726,9 @@
     function displayStock() {
         let html = '<table>';
         html += '<thead><tr><th>Cód. 🏷️</th><th>Descrição do Produto</th><th>Estoque Atual 🔢</th><th style="text-align:center;">Ações</th></tr></thead><tbody>';
+        
+        const stockLabels = ["Código", "Descrição do Produto", "Estoque Atual", "Ações"];
+
         stockData.estoque.forEach(product => {
             const actionButtons = `
                 <div style="display:flex; justify-content:center; gap:8px;">
@@ -659,7 +740,12 @@
                     </button>
                 </div>
             `;
-            html += `<tr><td>${product.codigoProduto}</td><td>${product.descricaoProduto}</td><td>${product.estoque}</td><td>${actionButtons}</td></tr>`;
+            html += `<tr>
+                        <td data-label="${stockLabels[0]}">${product.codigoProduto}</td>
+                        <td data-label="${stockLabels[1]}">${product.descricaoProduto}</td>
+                        <td data-label="${stockLabels[2]}">${product.estoque}</td>
+                        <td data-label="${stockLabels[3]}">${actionButtons}</td>
+                    </tr>`;
         });
         html += '</tbody></table>';
         document.getElementById('stock-results').innerHTML = html;
@@ -771,67 +857,7 @@
     }
 
     // ==========================================================
-    // --- QUESTÃO 3: CÁLCULO DE JUROS (COM DATA DE PAGAMENTO) ---
-    // (Funções inalteradas)
-    // ==========================================================
-    function calculateInterest() {
-        const principalValue = parseFloat(document.getElementById('principalValue').value);
-        const dueDateString = document.getElementById('dueDate').value;
-        const paymentDateString = document.getElementById('paymentDate').value;
-
-        if (isNaN(principalValue) || principalValue <= 0 || !dueDateString || !paymentDateString) {
-            showFeedback('interestResult', 'danger', 'Por favor, preencha o valor principal, a data de vencimento e a data de pagamento.');
-            return;
-        }
-
-        const dueDate = new Date(dueDateString);
-        const paymentDate = new Date(paymentDateString);
-
-        dueDate.setHours(0, 0, 0, 0);
-        paymentDate.setHours(0, 0, 0, 0);
-
-        if (paymentDate <= dueDate) {
-            showFeedback('interestResult', 'success', `🎉 Pagamento em dia (Data de Pagamento: ${paymentDate.toLocaleDateString('pt-BR')})! Valor: ${formatCurrency(principalValue)}. Nenhum juro ou multa aplicado.`);
-            return;
-        }
-        
-        const timeDifference = paymentDate.getTime() - dueDate.getTime();
-        const daysOverdue = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
-
-        const dailyRate = 0.025; // 2.5%
-        const dailyInterestValue = principalValue * dailyRate; 
-        const interestValue = dailyInterestValue * daysOverdue;
-        const totalValue = principalValue + interestValue;
-
-        document.getElementById('interestResult').className = 'result-box result-danger';
-        document.getElementById('interestResult').style.display = 'block';
-        document.getElementById('interestResult').innerHTML = `
-            <p><strong>Período de Atraso: ${daysOverdue} dias</strong></p>
-            <p>Vencimento: ${dueDate.toLocaleDateString('pt-BR')} | Pagamento: ${paymentDate.toLocaleDateString('pt-BR')}</p>
-            <p>Valor Principal: ${formatCurrency(principalValue)}</p>
-            <p>Multa Fixa Diária (2,5%): ${formatCurrency(dailyInterestValue)}</p>
-            <p>Juros/Multa Total: **${formatCurrency(interestValue)}**</p>
-            <p><strong>Total Pago: ${formatCurrency(totalValue)}</strong></p>
-        `;
-    }
-
-    function setDefaultDates() {
-        const dueDateInput = document.getElementById('dueDate');
-        const paymentDateInput = document.getElementById('paymentDate');
-
-        const defaultDueDate = new Date();
-        defaultDueDate.setDate(defaultDueDate.getDate() - 7); 
-
-        const defaultPaymentDate = new Date();
-        defaultPaymentDate.setDate(defaultPaymentDate.getDate() - 1); 
-
-        dueDateInput.value = defaultDueDate.toISOString().split('T')[0];
-        paymentDateInput.value = defaultPaymentDate.toISOString().split('T')[0];
-    }
-
-    // ==========================================================
     // --- FUNÇÕES DE EXPORTAÇÃO ---
-    // (Funções inalteradas)
     // ==========================================================
     function exportToExcel() {
         if (typeof XLSX === 'undefined') {
@@ -858,13 +884,16 @@
         const stockTableContainer = document.getElementById('stock-results');
         const table = stockTableContainer.querySelector('table');
         if (!table) { showFeedback('movementResult', 'danger', 'Erro: A tabela de estoque não foi encontrada para exportação em PDF.'); return; }
-        const actionColumnIndex = table.rows[0].cells.length - 1;
-
+        
+        // Esconde a coluna de Ações (Ações é sempre a última)
+        const headerRow = table.rows[0];
+        const actionColumnIndex = headerRow.cells.length - 1;
         for (let i = 0; i < table.rows.length; i++) {
             if (table.rows[i].cells.length > actionColumnIndex) {
                 table.rows[i].cells[actionColumnIndex].style.display = 'none';
             }
         }
+
         html2canvas(table).then(canvas => {
             const imgData = canvas.toDataURL('image/png');
             const { jsPDF } = window.jspdf;
@@ -883,6 +912,82 @@
             }
         });
         showFeedback('movementResult', 'success', 'Relatório de Estoque exportado para **PDF** com sucesso!');
+    }
+
+    // ==========================================================
+    // --- QUESTÃO 3: CÁLCULO DE JUROS (COM DATA DE PAGAMENTO) ---
+    // ==========================================================
+    function calculateInterest() {
+        const principalValue = parseFloat(document.getElementById('principalValue').value);
+        const dueDateString = document.getElementById('dueDate').value;
+        const paymentDateString = document.getElementById('paymentDate').value;
+
+        if (isNaN(principalValue) || principalValue <= 0 || !dueDateString || !paymentDateString) {
+            showFeedback('interestResult', 'danger', 'Por favor, preencha o valor principal, a data de vencimento e a data de pagamento.');
+            return;
+        }
+        
+        // CORREÇÃO DE FUSO HORÁRIO
+        // 1. Extrai os componentes da data YYYY, MM, DD
+        const [dueY, dueM, dueD] = dueDateString.split('-').map(Number);
+        const [payY, payM, payD] = paymentDateString.split('-').map(Number);
+        
+        // 2. Cria objetos Date usando Date.UTC para forçar a data a começar em meia-noite UTC.
+        // Isso evita que o fuso horário local (ex: GMT-3) faça a data retroceder para o dia anterior no display.
+        const dueDate = new Date(Date.UTC(dueY, dueM - 1, dueD));
+        const paymentDate = new Date(Date.UTC(payY, payM - 1, payD));
+
+        // 3. Força a exibição como UTC para garantir que o dia inserido seja o dia exibido
+        const formattedDueDate = dueDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+        const formattedPaymentDate = paymentDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+
+
+        if (paymentDate <= dueDate) {
+            showFeedback('interestResult', 'success', `🎉 Pagamento em dia (Data de Pagamento: ${formattedPaymentDate})! Valor: ${formatCurrency(principalValue)}. Nenhum juro ou multa aplicado.`);
+            return;
+        }
+        
+        const timeDifference = paymentDate.getTime() - dueDate.getTime();
+        const millisecondsInDay = 1000 * 60 * 60 * 24;
+
+        // O cálculo de daysOverdue agora é preciso porque ambas as datas estão ancoradas em UTC 00:00:00
+        const daysOverdue = Math.round(timeDifference / millisecondsInDay); 
+
+        if (daysOverdue <= 0) {
+             showFeedback('interestResult', 'danger', 'Erro de cálculo: A data de pagamento não é posterior à data de vencimento, mas a lógica falhou. Verifique as datas.');
+             return;
+        }
+
+
+        const dailyRate = 0.025; // 2.5%
+        const dailyInterestValue = principalValue * dailyRate; 
+        const interestValue = dailyInterestValue * daysOverdue;
+        const totalValue = principalValue + interestValue;
+
+        document.getElementById('interestResult').className = 'result-box result-danger';
+        document.getElementById('interestResult').style.display = 'block';
+        document.getElementById('interestResult').innerHTML = `
+            <p><strong>Período de Atraso: ${daysOverdue} dias</strong></p>
+            <p>Vencimento: ${formattedDueDate} | Pagamento: ${formattedPaymentDate}</p>
+            <p>Valor Principal: ${formatCurrency(principalValue)}</p>
+            <p>Multa Fixa Diária (2,5%): ${formatCurrency(dailyInterestValue)}</p>
+            <p>Juros/Multa Total: **${formatCurrency(interestValue)}**</p>
+            <p><strong>Total Pago: ${formatCurrency(totalValue)}</strong></p>
+        `;
+    }
+
+    function setDefaultDates() {
+        const dueDateInput = document.getElementById('dueDate');
+        const paymentDateInput = document.getElementById('paymentDate');
+
+        const defaultDueDate = new Date();
+        defaultDueDate.setDate(defaultDueDate.getDate() - 7); 
+
+        const defaultPaymentDate = new Date();
+        defaultPaymentDate.setDate(defaultPaymentDate.getDate() - 1); 
+
+        dueDateInput.value = defaultDueDate.toISOString().split('T')[0];
+        paymentDateInput.value = defaultPaymentDate.toISOString().split('T')[0];
     }
 
 
